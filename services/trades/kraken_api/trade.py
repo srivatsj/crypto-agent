@@ -1,5 +1,6 @@
-from pydantic import BaseModel
 from datetime import datetime
+
+from pydantic import BaseModel
 
 
 class Trade(BaseModel):
@@ -14,6 +15,7 @@ class Trade(BaseModel):
     "trade_id": 4665906,
     "timestamp": "2023-09-25T07:49:37.708706Z"
     """
+
     pair: str
     price: float
     volume: float
@@ -28,9 +30,3 @@ class Trade(BaseModel):
 
     def to_dict(self) -> dict:
         return self.model_dump_json()
-        #return {
-        #    "pair": self.pair,
-        #    "price": self.price,
-        #    "volume": self.volume,
-        #    "timestamp_ms": self.timestamp_ms
-        #}

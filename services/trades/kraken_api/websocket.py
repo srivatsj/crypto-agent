@@ -1,12 +1,14 @@
-from typing import List
-from .trade import Trade
-from websocket import create_connection
 import json
+from typing import List
+
 from loguru import logger
+from websocket import create_connection
+
+from .trade import Trade
+
 
 class KrakenWebsocketAPI:
-    
-    URL = "wss://ws.kraken.com/v2"
+    URL = 'wss://ws.kraken.com/v2'
 
     def __init__(self, pairs: List[str]):
         self.pairs = pairs
@@ -16,22 +18,24 @@ class KrakenWebsocketAPI:
 
         self._subscribe()
 
-
     def _subscribe(self):
         # Subscribe to the Kraken websocket API
-        self._ws_client.send(json.dumps({
-            "method": "subscribe",
-            "params": {
-                "channel": "trade",
-                "symbol": self.pairs,
-                "snapshot": True
-            }
-        }))
+        self._ws_client.send(
+            json.dumps(
+                {
+                    'method': 'subscribe',
+                    'params': {
+                        'channel': 'trade',
+                        'symbol': self.pairs,
+                        'snapshot': True,
+                    },
+                }
+            )
+        )
 
         for _pair in self.pairs:
             _ = self._ws_client.recv()
             _ = self._ws_client.recv()
-
 
     def get_trades(self) -> List[Trade]:
         """
@@ -41,30 +45,33 @@ class KrakenWebsocketAPI:
             List[Trade]: A list of Trade objects.
         """
         # Fetch trades from the Kraken websocket API
-        data  = self._ws_client.recv()
+        data = self._ws_client.recv()
 
         if 'heartbeat' in data:
-            logger.info(f"Heartbeat received: {data}")
+            logger.info(f'Heartbeat received: {data}')
             return []
 
         # Transform the data into JSON object
         try:
             data = json.loads(data)
         except json.JSONDecodeError:
-            logger.error(f"Failed to decode JSON: {data}")
+            logger.error(f'Failed to decode JSON: {data}')
             return []
 
         try:
-            trades_data = data["data"]
+            trades_data = data['data']
         except KeyError:
-            logger.error(f"No data field with trades in the message: {data}")
+            logger.error(f'No data field with trades in the message: {data}')
             return []
 
-        trades = [Trade(
-            pair=trade["symbol"],
-            price=trade["price"],
-            volume=trade["qty"],
-            timestamp=trade["timestamp"],
-        ) for trade in trades_data]
-        
+        trades = [
+            Trade(
+                pair=trade['symbol'],
+                price=trade['price'],
+                volume=trade['qty'],
+                timestamp=trade['timestamp'],
+            )
+            for trade in trades_data
+        ]
+
         return trades
