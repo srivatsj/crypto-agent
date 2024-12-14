@@ -39,9 +39,11 @@ def main(
             trades = kraken_api.get_trades()
 
             for trade in trades:
-                # Serialize the trade to bytes
-                message = topic.serialize(key=trade.pair, value=trade.to_dict())
-                producer.produce(topic=topic.name, value=message.value, key=message.key)
+                producer.produce(
+                    topic=topic.name,
+                    value=trade.to_dict(),
+                    key=trade.pair.replace('/', '_'),
+                )
 
                 logger.info(f'Produced trade to topic {trade}')
                 sleep(1)

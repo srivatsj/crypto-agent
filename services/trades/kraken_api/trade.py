@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 
 
 class Trade(BaseModel):
@@ -21,6 +21,7 @@ class Trade(BaseModel):
     volume: float
     timestamp: datetime
 
+    @computed_field
     @property
     def timestamp_ms(self) -> int:
         """
