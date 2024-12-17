@@ -43,7 +43,7 @@ def main(
 
     sdf = sdf.apply(compute_technical_indicators, stateful=True)
 
-    sdf.update(lambda value: logger.info(f'Technical indicator: {value}'))
+    sdf.update(lambda value: logger.debug(f'final message: {value}'))
 
     sdf.to_topic(output_topic)
 

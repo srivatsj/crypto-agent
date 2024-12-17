@@ -58,4 +58,4 @@ def update_candles(candle: dict, state: State) -> dict:
     # Update the state with the new list of candles
     state.set('candles', candles)
 
-    return candles
+    return candle
