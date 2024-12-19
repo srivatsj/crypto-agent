@@ -10,6 +10,8 @@ def main(
     kafka_input_topic: str,
     kafka_output_topic: str,
     kafka_consumer_group: str,
+    max_candles_in_state: int,
+    candle_seconds: int,
 ):
     """
     3 steps:
@@ -22,7 +24,8 @@ def main(
         kafka_input_topic: The topic to consume candles from.
         kafka_output_topic: The topic to produce technical indicators to.
         kafka_consumer_group: The consumer group to use for the Kafka consumer.
-
+        max_candles_in_state: The maximum number of candles to keep in the state.
+        candle_seconds: The number of seconds per candle.
     Returns:
         None
     """
@@ -38,6 +41,9 @@ def main(
 
     # Create streaming dataframes so we can start transforming the data in real-time
     sdf = app.dataframe(topic=input_topic)
+
+    # We only want to keep the candles with the same window size as the candle_seconds
+    sdf = sdf[sdf['candle_seconds'] == candle_seconds]
 
     sdf = sdf.apply(update_candles, stateful=True)
 
@@ -56,4 +62,6 @@ if __name__ == '__main__':
         kafka_input_topic=config.kafka_input_topic,
         kafka_output_topic=config.kafka_output_topic,
         kafka_consumer_group=config.kafka_consumer_group,
+        max_candles_in_state=config.max_candles_in_state,
+        candle_seconds=config.candle_seconds,
     )
