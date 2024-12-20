@@ -10,6 +10,8 @@ class Config(BaseSettings):
     kafka_consumer_group: str
     feature_group_name: str
     feature_group_version: str
+    feature_group_primary_keys: list[str]
+    feature_group_event_time: str
 
 
 class HopsworksCredentials(BaseSettings):
@@ -17,6 +19,7 @@ class HopsworksCredentials(BaseSettings):
         env_file='credentials.env', env_file_encoding='utf-8'
     )
     hopsworks_api_key: str
+    hopsworks_project_name: str
 
 
 config = Config()
