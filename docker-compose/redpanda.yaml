@@ -12,6 +12,7 @@ services:
   # Redpanda Brokers #
   ##################
   redpanda-0:
+    user: root
     command:
       - redpanda
       - start

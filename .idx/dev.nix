@@ -13,6 +13,7 @@
     # pkgs.nodePackages.nodemon
     pkgs.gnumake
     pkgs.pre-commit
+    pkgs.uv
   ];
 
   # Sets environment variables in the workspace
