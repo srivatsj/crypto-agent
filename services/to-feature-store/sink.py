@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import hopsworks
 import pandas as pd
 from quixstreams.sinks.base import BatchingSink, SinkBackpressureError, SinkBatch
@@ -16,6 +18,7 @@ class HopsworksFeatureStoreSink(BatchingSink):
         feature_group_version: int,
         feature_group_primary_keys: list[str],
         feature_group_event_time: str,
+        feature_group_materialization_minutes: int,
     ):
         """
         Establishes a connection to the Hopsworks feature store.
@@ -32,6 +35,11 @@ class HopsworksFeatureStoreSink(BatchingSink):
             primary_key=feature_group_primary_keys,
             event_time=feature_group_event_time,
             online_enabled=True,
+        )
+
+        self._feature_group.materialization_job.schedule(
+            cron_expression=f'0 0/{feature_group_materialization_minutes} * ? * *',
+            start_time=datetime.now(tz=timezone.utc),
         )
 
     def write(self, batch: SinkBatch):
