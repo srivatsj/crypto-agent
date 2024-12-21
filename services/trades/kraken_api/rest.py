@@ -74,6 +74,8 @@ class KrakenRestAPISinglePair(TradesApi):
             logger.error(f'Failed to parse response as JSON: {e}')
             return []
 
+        # TODO: Check if the request is throttled, we need implement a retry and slow down mechanism
+
         # Get the trades for the self.pair cryptocurrency
         try:
             trades = data['result'][self.pair]
@@ -93,7 +95,7 @@ class KrakenRestAPISinglePair(TradesApi):
         ]
 
         # Update the since_timestamp_nanoseconds to the timestamp of the last trade
-        self.since_timestamp_nanoseconds = float(data['result']['last'])
+        self.since_timestamp_nanoseconds = int(float(data['result']['last']))
 
         # Check if the since_timestamp_nanoseconds is greater than the current timestamp
         if self.since_timestamp_nanoseconds > int(time.time_ns() - 1e9):
