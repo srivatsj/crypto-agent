@@ -5,10 +5,14 @@
 
 - [ ] Cursor
 - [ ] UV - [pip install uv](https://github.com/astral-sh/uv)
-- [ ] Loguru - uv add loguru
-- [ ] Docker
+- [ ] Redpanda, Loguru, Quixstreams, TA-Lib, Hopsworks, Docker
+- [ ] Ruff for linting and formatting
+- [ ] Make for running the services locally
 
 
-## Feature pipeline
+## Services
 
-Trades service
+- [ ] Trades service
+- [ ] Candles service
+- [ ] Technical indicators service
+- [ ] To feature store service
