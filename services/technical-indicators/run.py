@@ -1,3 +1,5 @@
+from typing import Literal
+
 from candle import update_candles
 from config import config
 from loguru import logger
@@ -12,6 +14,7 @@ def main(
     kafka_consumer_group: str,
     max_candles_in_state: int,
     candle_seconds: int,
+    data_source: Literal['live', 'historical', 'test'],
 ):
     """
     3 steps:
@@ -26,6 +29,7 @@ def main(
         kafka_consumer_group: The consumer group to use for the Kafka consumer.
         max_candles_in_state: The maximum number of candles to keep in the state.
         candle_seconds: The number of seconds per candle.
+        data_source: The data source of live, historical or test.
     Returns:
         None
     """
@@ -34,6 +38,7 @@ def main(
     app = Application(
         broker_address=kafka_broker_address,
         consumer_group=kafka_consumer_group,
+        auto_offset_reset='latest' if data_source == 'live' else 'earliest',
     )
 
     input_topic = app.topic(name=kafka_input_topic, value_deserializer='json')
@@ -64,4 +69,5 @@ if __name__ == '__main__':
         kafka_consumer_group=config.kafka_consumer_group,
         max_candles_in_state=config.max_candles_in_state,
         candle_seconds=config.candle_seconds,
+        data_source=config.data_source,
     )
