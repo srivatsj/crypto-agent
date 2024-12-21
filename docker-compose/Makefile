@@ -9,12 +9,35 @@ add-one-partition-to-trades-topic:
 	docker compose -f redpanda.yaml exec redpanda-0 rpk topic add-partitions trades --num 1
 
 
-# Technical indicators pipeline
-build-technical-indicators-pipeline:
-	docker compose -f technical-indicators-pipeline.yaml build
+# Technical indicators live pipeline
+build-technical-indicators-live-pipeline:
+	docker compose -f technical-indicators-live-pipeline.yaml build
 
-start-technical-indicators-pipeline: build-technical-indicators-pipeline
-	docker compose -f technical-indicators-pipeline.yaml up -d
+start-technical-indicators-live-pipeline: build-technical-indicators-live-pipeline
+	docker compose -f technical-indicators-live-pipeline.yaml up -d
 
-stop-technical-indicators-pipeline:
-	docker compose -f technical-indicators-pipeline.yaml down
+stop-technical-indicators-live-pipeline:
+	docker compose -f technical-indicators-live-pipeline.yaml down
+
+
+# Technical indicators historical pipeline
+build-technical-indicators-historical-pipeline:
+	$(eval RUN_ID := $(shell uuidgen))
+	echo "RUN_ID: $(RUN_ID)"
+	RUN_ID=$$(uuidgen) docker compose -f technical-indicators-historical-pipeline.yaml build
+
+start-technical-indicators-historical-pipeline: build-technical-indicators-historical-pipeline
+	docker compose -f technical-indicators-historical-pipeline.yaml up -d
+
+stop-technical-indicators-historical-pipeline:
+	docker compose -f technical-indicators-historical-pipeline.yaml down
+
+
+########################################
+## Clean up
+########################################
+
+# Remove unused Kafka topic after backfill operations
+clean-backfill-kakfa-topics:
+	@echo "Removing all Kafka topics that contain the word historical"
+	docker compose -f redpanda.yaml exec redpanda-0 rpk topic delete -r ".*historical.*"
