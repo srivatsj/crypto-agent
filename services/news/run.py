@@ -32,7 +32,7 @@ def main(
     # Create the streaming dataframe
     sdf = app.dataframe(source=news_source)
 
-    sdf.print(metadata=True)
+    # sdf.print(metadata=True)
 
     # Send the news to the output topic
     sdf = sdf.to_topic(output_topic)
