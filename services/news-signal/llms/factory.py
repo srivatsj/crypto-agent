@@ -1,7 +1,8 @@
 from typing import Literal
 
 from .base import BaseNewsSignalExtractor
-from .config import openai_config
+from .config import ollama_config, openai_config
+from .ollama import OllamaNewsSignalExtractor
 from .openai import OpenAINewsSignalExtractor
 
 
@@ -20,5 +21,7 @@ def get_llms(model_provider: Literal['openai', 'ollama']) -> BaseNewsSignalExtra
         return OpenAINewsSignalExtractor(
             model_name=openai_config.model_name, api_key=openai_config.api_key
         )
+    elif model_provider == 'ollama':
+        return OllamaNewsSignalExtractor(model_name=ollama_config.model_name)
     else:
         raise ValueError(f'Unsupported model provider: {model_provider}')

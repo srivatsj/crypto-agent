@@ -1,20 +1,19 @@
 from typing import Literal, Optional
 
 from llama_index.core.prompts import PromptTemplate
-from llama_index.llms.openai import OpenAI
+from llama_index.llms.ollama import Ollama
 
 from .base import BaseNewsSignalExtractor, NewsSignal
-from .config import openai_config
+from .config import ollama_config
 
 
-class OpenAINewsSignalExtractor(BaseNewsSignalExtractor):
+class OllamaNewsSignalExtractor(BaseNewsSignalExtractor):
     def __init__(
         self,
         model_name: str,
-        api_key: str,
         temperature: Optional[float] = 0,
     ):
-        self.llm = OpenAI(model=model_name, api_key=api_key, temperature=temperature)
+        self.llm = Ollama(model=model_name, temperature=temperature)
         self.prompt_template = PromptTemplate(
             template="""
             You are a financial analyst.
@@ -51,9 +50,7 @@ class OpenAINewsSignalExtractor(BaseNewsSignalExtractor):
 
 
 if __name__ == '__main__':
-    llm = OpenAINewsSignalExtractor(
-        model_name=openai_config.model_name, api_key=openai_config.api_key
-    )
+    llm = OllamaNewsSignalExtractor(model_name=ollama_config.model_name)
 
     examples = [
         "Bitcoin ETF ads spotted on China's Alipay payment app",
@@ -66,29 +63,24 @@ if __name__ == '__main__':
         {
         'btc_signal': 1,
         'eth_signal': 0,
-        'reasoning': 'The presence of Bitcoin ETF ads on a major payment
-        app like Alipay in China indicates increased interest and accessibility
-        for Bitcoin investments, which is likely to drive up demand and
-        consequently the price of Bitcoin. However, this news does not
-        have a direct impact on Ethereum.'
+        'reasoning': "The news of Bitcoin ETF ads being spotted on China's Alipay
+        payment app suggests a growing interest in Bitcoin among Chinese investors.
+        This could lead to increased demand for BTC, causing its price to rise."
         }
         {
-        'btc_signal': 1,
-        'eth_signal': 0,
-        'reasoning': 'The presence of Bitcoin ETF ads on a major payment
-        app like Alipay in China indicates increased interest and
-        accessibility for Bitcoin investments, which is likely to drive
-        up demand and consequently the price of Bitcoin. However, this
-        news does not have a direct impact on Ethereum.'
+        'btc_signal': -1,
+        'eth_signal': -1,
+        'reasoning': "The US Supreme Court has ruled in favor of Nvidia's crypto
+        lawsuit, which could lead to increased regulatory scrutiny for the entire
+        cryptocurrency industry. This is likely to negatively impact both BTC and
+        ETH prices as investors become more cautious."
         }
         {
-        'btc_signal': 1,
-        'eth_signal': 0,
-        'reasoning': 'The presence of Bitcoin ETF ads on a major payment
-        app like Alipay in China indicates increased interest and
-        accessibility for Bitcoin investments, which is likely to drive
-        up demand and consequently the price of Bitcoin. However, this
-        news does not have a direct impact on Ethereum.'
+        'btc_signal': 0,
+        'eth_signal': 1,
+        'reasoning': "The acquisition of ETH by a major company like Trump's World
+        Liberty suggests that there is increased demand for Ethereum, which could
+        lead to an increase in its price."
         }
         """
         response = llm.get_news_signals(example)

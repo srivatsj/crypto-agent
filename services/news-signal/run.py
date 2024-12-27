@@ -31,6 +31,7 @@ def main(
         lambda value: {
             'news': value['title'],
             **llm.get_news_signals(value['title']),
+            'model_name': llm.model_name,
         }
     )
 
