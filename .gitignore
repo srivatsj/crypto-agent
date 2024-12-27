@@ -212,3 +212,4 @@ target/
 anthropic.env
 **/hopsworks_credentials.env
 **/cryptopanic_credentials.env
+**/openai_credentials.env
