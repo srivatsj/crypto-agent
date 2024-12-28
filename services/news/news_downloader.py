@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Tuple
 
 import requests
@@ -16,7 +17,15 @@ class News(BaseModel):
     source: str
 
     def to_dict(self) -> dict:
-        return self.model_dump()
+        try:
+            timestamp = datetime.strptime(self.published_at, '%Y-%m-%dT%H:%M:%S.%fZ')
+        except ValueError:
+            timestamp = datetime.strptime(self.published_at, '%Y-%m-%dT%H:%M:%S%z')
+
+        return {
+            **self.model_dump(),
+            'timestamp_ms': int(timestamp.timestamp() * 1000),
+        }
 
 
 class NewsDownloader:
