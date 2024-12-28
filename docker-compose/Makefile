@@ -33,6 +33,16 @@ stop-technical-indicators-historical-pipeline:
 	docker compose -f technical-indicators-historical-pipeline.yaml down
 
 
+# News signal live pipeline
+build-news-signal-live-pipeline:
+	docker compose -f news-signal-live-pipeline.yaml build
+
+start-news-signal-live-pipeline: build-news-signal-live-pipeline
+	docker compose -f news-signal-live-pipeline.yaml up -d
+
+stop-news-signal-live-pipeline:
+	docker compose -f news-signal-live-pipeline.yaml down
+
 ########################################
 ## Clean up
 ########################################
