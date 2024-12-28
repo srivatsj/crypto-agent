@@ -4,46 +4,54 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 
+class NewsSignalOneCoin(BaseModel):
+    coin: Literal[
+        'BTC',
+        'ETH',
+        'SOL',
+        'XRP',
+        'DOGE',
+        'ADA',
+        'XLM',
+        'LTC',
+        'BCH',
+        'DOT',
+        'XMR',
+        'EOS',
+        'XEM',
+        'ZEC',
+        'ETC',
+        'XLM',
+        'LTC',
+        'BCH',
+        'DOT',
+        'XMR',
+        'EOS',
+        'XEM',
+        'ZEC',
+        'ETC',
+        'LINK',
+        'AAVE',
+    ] = Field(description='The coin that the news is about')
+    signal: Literal[1, -1] = Field(
+        description="""
+        The signal of the news on the coin price.
+        1 if the price is expected to go up
+        -1 if the price is expected to go down.
+
+        If the news is not related to the coin, no need to create a news signal.
+        """
+    )
+
+
 class NewsSignal(BaseModel):
-    """
-    Represents a market sentiment for the crypto.
-    """
-
-    btc_signal: Literal[1, 0, -1] = Field(
-        description="""
-        The impact of the news on the BTC price.
-        1 if the price is expected to go up
-        0 if the price is expected to remain the same,
-        -1 if the price is expected to go down.
-
-        If the news is not related to BTC, the value is 0.
-                                          """
-    )
-    eth_signal: Literal[1, 0, -1] = Field(
-        description="""
-        The impact of the news on the ETH price.
-        1 if the price is expected to go up
-        0 if the price is expected to remain the same,
-        -1 if the price is expected to go down.
-
-        if the news is not related to ETH, the value is 0.
-        """
-    )
-    reasoning: str = Field(
-        description="""
-        The reasoning behind the btc_signal and eth_signal extracted from the news article.
-        """
-    )
+    news_signals: list[NewsSignalOneCoin]
 
     def to_dict(self) -> dict:
         """
         Returns a dictionary representation of the NewsSignal object.
         """
-        return {
-            'btc_signal': self.btc_signal,
-            'eth_signal': self.eth_signal,
-            'reasoning': self.reasoning,
-        }
+        raise NotImplementedError()
 
 
 class BaseNewsSignalExtractor(ABC):

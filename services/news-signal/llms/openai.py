@@ -5,6 +5,7 @@ from llama_index.llms.openai import OpenAI
 
 from .base import BaseNewsSignalExtractor, NewsSignal
 from .config import openai_config
+from .prompt_template import prompt_template
 
 
 class OpenAINewsSignalExtractor(BaseNewsSignalExtractor):
@@ -15,30 +16,11 @@ class OpenAINewsSignalExtractor(BaseNewsSignalExtractor):
         temperature: Optional[float] = 0,
     ):
         self.llm = OpenAI(model=model_name, api_key=api_key, temperature=temperature)
-        self.prompt_template = PromptTemplate(
-            template="""
-            You are a financial analyst.
-            You are given a news article and you need to determine the impact of the news on the BTC and ETH price.
-
-            You need to output the signal in the following format:
-            {
-                "btc_signal": 1,
-                "eth_signal": 0
-            }
-
-            The signal is either 1, 0, or -1.
-            1 means the price is expected to go up.
-            0 means the price is expected to remain the same.
-            -1 means the price is expected to go down.
-
-            Here is the news article:
-            {news_article}
-       """
-        )
+        self.prompt_template = PromptTemplate(template=prompt_template)
         self.model_name = model_name
 
     def get_news_signals(
-        self, text: str, output_format: Literal['dict', 'NewsSignal'] = 'dict'
+        self, text: str, output_format: Literal['dict', 'NewsSignal'] = 'NewsSignal'
     ) -> NewsSignal | dict:
         response: NewsSignal = self.llm.structured_predict(
             NewsSignal, prompt=self.prompt_template, news_article=text
