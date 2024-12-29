@@ -19,7 +19,7 @@ class OllamaNewsSignalExtractor(BaseNewsSignalExtractor):
         self.model_name = model_name
 
     def get_news_signals(
-        self, text: str, output_format: Literal['dict', 'NewsSignal'] = 'dict'
+        self, text: str, output_format: Literal['dict', 'NewsSignal'] = 'NewsSignal'
     ) -> NewsSignal | dict:
         response: NewsSignal = self.llm.structured_predict(
             NewsSignal, prompt=self.prompt_template, news_article=text

@@ -6,7 +6,7 @@ from .ollama import OllamaNewsSignalExtractor
 from .openai import OpenAINewsSignalExtractor
 
 
-def get_llms(model_provider: Literal['openai', 'ollama']) -> BaseNewsSignalExtractor:
+def get_llm(model_provider: Literal['openai', 'ollama']) -> BaseNewsSignalExtractor:
     """
     Get the LLMs we want for the news signal extracter
 

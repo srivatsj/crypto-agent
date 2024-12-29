@@ -1,6 +1,6 @@
 from config import config
 from llms.base import BaseNewsSignalExtractor
-from llms.factory import get_llms
+from llms.factory import get_llm
 from llms.openai import OpenAINewsSignalExtractor
 from loguru import logger
 from quixstreams import Application
@@ -46,7 +46,7 @@ def main(
 if __name__ == '__main__':
     logger.info(f'Get llm for model provider: {config.model_provider}')
     # Get the LLM we want for the news signal extracter
-    llm: BaseNewsSignalExtractor = get_llms(config.model_provider)
+    llm: BaseNewsSignalExtractor = get_llm(config.model_provider)
 
     main(
         kafka_broker_address=config.kafka_broker_address,

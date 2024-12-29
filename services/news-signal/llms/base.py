@@ -33,10 +33,11 @@ class NewsSignalOneCoin(BaseModel):
         'LINK',
         'AAVE',
     ] = Field(description='The coin that the news is about')
-    signal: Literal[1, -1] = Field(
+    signal: Literal[1, 0, -1] = Field(
         description="""
         The signal of the news on the coin price.
         1 if the price is expected to go up
+        0 if the news is not related to the coin
         -1 if the price is expected to go down.
 
         If the news is not related to the coin, no need to create a news signal.
