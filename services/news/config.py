@@ -1,3 +1,5 @@
+from typing import Literal, Optional
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,7 +20,9 @@ class Config(BaseSettings):
     )
     kafka_broker_address: str
     kafka_output_topic: str
-    polling_interval_seconds: int
+    data_source: Literal['live', 'historical']
+    polling_interval_seconds: Optional[int] = 10
+    historical_data_source_url: Optional[str] = None
 
 
 cryptopanic_config = CryptopanicConfig()
